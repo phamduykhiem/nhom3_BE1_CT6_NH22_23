@@ -1,0 +1,10 @@
+<?php
+session_start();
+if(isset($_POST['email']))
+{
+    if($_SESSION['user']['email']==$_POST['email'])
+    {
+        header("location:recover-password.html");
+    }
+}
+?>

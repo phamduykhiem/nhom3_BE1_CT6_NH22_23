@@ -1,18 +1,6 @@
 <?php
  include "header.php";
  include "sidebar.php";
- if(isset($_GET['thongbaoxoa']))
- {
-  echo '<script> alert("Đã xóa thành công topsell co id '.$_GET['thongbaoxoa'].'");
-  location.href = "topsell.php";
-  </script>';
- }
- if(isset($_GET['thongbao']))
- {
-  echo '<script> alert("Đã sửa thành công top có id'.$_GET['thongbao'].'");
-  location.href = "topsell.php";
-  </script>';
- }
 ?>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -22,6 +10,7 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Projects</h1>
+            <a class="btn btn-success" href="protypes-add.php">ADD</a>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -54,66 +43,36 @@
           <table class="table table-striped projects">
               <thead>
                   <tr>
-                      <th style="width: 10%">
+                      <th style="width: 1%">
                           Image
                       </th>
-                      <th style="width: 10%">
+                      <th style="width: 79%">
                           Name
-                      </th>
-                      <th style="width: 10%">
-                          Quadlity sold
-                      </th>
-                      <th style="width: 10%">
-                          Price
-                      </th>
-                      <th style="width: 10%">
-                          Description
-                      </th>
-                      <th style="width: 10%" class="text-center">
-                          Manufractures
-                      </th>
-                      <th style="width: 10%" class="text-center">
-                          Protype
                       </th>
                       <th style="width: 20%">
                       </th>
                   </tr>
               </thead>
-              <tbody class = "bodyy">
+              <tbody class = "bodyyy">
                 <?php
-                $gettopsell=$product->gettopsell();
-                foreach($gettopsell as $value){
-                  $id=$value['id']
+                $getprototype=$product->getprotype();
+                foreach($getprototype as $value){
+                  $id=$value['type_id']
                 ?>
                   <tr>
                       <td>
-                         <img style="width:100px" src="../img/<?php echo $value['image'] ?>" alt=""> 
-                      </td>
-                      <td>
-                      <?php echo $value['name'] ?>
-                      </td>
-                      <td>
-                      <?php echo $value['soLuong'] ?>
-                      </td>
-                      <td>
-                      <?php echo number_format($value['price']).' VND' ?>
-                      </td>
-                      <td>
-                      <?php echo substr($value['desciption'],0,50) ?>
-                      </td>
-                      <td>
-                      <?php echo $value['manu_name'] ?>
+                         <img style="width:100px" src="../img/<?php echo $value['logoProtypes'] ?>" alt=""> 
                       </td>
                       <td>
                       <?php echo $value['type_name'] ?>
                       </td>
                       <td class="project-actions text-right">
-                          <a class="btn btn-info btn-sm" href="topsell-edit.php?id=<?php echo $id ?>">
+                          <a class="btn btn-info btn-sm" href="protypes-edit.php?id=<?php echo $id ?>">
                               <i class="fas fa-pencil-alt">
                               </i>
                               Edit
                           </a>
-                          <a class="btn btn-danger btn-sm" href="delete.php?idsellxoa=<?php echo $id ?>">
+                          <a id = "<?php echo $value['type_id']; ?>"  class="btn btn-danger btn-sm dete" >
                               <i class="fas fa-trash">
                               </i>
                               Delete
@@ -134,4 +93,31 @@
   <!-- /.content-wrapper -->
 <?php
 include "footer.php";
+
 ?>
+<script>
+function filterdata(typeid) {
+  var action = 'chay';
+                $.ajax({
+                url: 'ajaxdeleteadmin.php',
+                dataType: 'html',
+                method: 'POST',
+                data: {
+                  'action' : action,'typeid' : typeid
+                },
+                success: function(html){
+                  if(html=="Sai")
+                  {
+                    alert("Có nhiều sản phẩm thuộc loại này nên không thể xóa")
+                  }
+                  else
+                  {
+                    $('.bodyyy').html(html);
+                  }
+                }
+            });
+            }
+    $(document).on("click",".dete",function () {
+                filterdata(this.id);
+            });
+</script>
