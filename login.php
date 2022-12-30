@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="loginn.css">
 </head>
 <body>
+  <?php session_start(); ?>
     <div id="banner">
       <img src="img/logo.png" alt="">
     </div>
@@ -36,25 +37,31 @@
   require "user.php";
   $user=new User;
   $getuser=$user->getALLinfo();
-if(isset($_POST['username'])&&isset($_POST['password']))
+  $a=0;
+if(isset($_SESSION['user']))
+{
+  header("location:index.php");
+}
+else if(isset($_POST['username'])&&isset($_POST['password']))
 {
 $user=$_POST['username'];
 $pass=$_POST['password'];
-$a=0;
 foreach($getuser as $value)
 {
   if($value['username']==$user)
   {
       if($value['password']==md5($pass))
       {
+        $_SESSION['user'] = $value['uid'];
           $a=1;
       }
   }
 }
 if($a==1)
 {
-  header("location:index.html");
-}else
+  header("location:index.php");
+}
+else
 {
    echo "<b> Sai tài khoản hoặc mật khẩu </b>";
 }
@@ -62,5 +69,10 @@ if($a==1)
 ?>
             </div>
     </div>
+    <script>      
+            const banner = document.getElementById("banner"); 
+     banner.addEventListener("click", function(){
+            location.replace("index.php");
+        });</script>
 </body>
 </html>
